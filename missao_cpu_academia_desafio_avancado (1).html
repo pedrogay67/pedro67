@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Missão CPU: programa interativo para aprender arquitetura e funcionamento do processador, com desafios avançados e correção explicada.">
+<title>Missão CPU — Academia do Processador</title>
+<style>
+:root{--bg:#07111f;--panel:#101f33;--panel2:#152943;--text:#eef6ff;--muted:#a9bdd2;--cyan:#52d5f2;--blue:#3988ff;--green:#39d98a;--red:#ff6978;--gold:#ffd166}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#142b48 0%,var(--bg) 58%);color:var(--text);font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+header{padding:30px 18px 22px;text-align:center;background:linear-gradient(135deg,#0b1d33,#12395b);border-bottom:1px solid #2a5575}
+header .eyebrow{color:var(--cyan);font-weight:700;letter-spacing:2px;font-size:.78rem}
+h1{font-size:clamp(2rem,5vw,3.4rem);margin:6px 0;color:#fff}
+header p{max-width:760px;margin:0 auto;color:#c5d9ed}
+nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:14px;background:#091727;position:sticky;top:0;z-index:5;border-bottom:1px solid #23415f}
+nav button,.btn{border:1px solid #386181;background:#142c45;color:var(--text);padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
+nav button[aria-selected="true"],.btn.primary{background:var(--cyan);color:#052033;border-color:var(--cyan)}
+button:hover{filter:brightness(1.12)}
+main{max-width:1100px;margin:24px auto;padding:0 16px 48px}
+section.page{display:none}
+section.page.active{display:block}
+.hero-card,.card,.lesson,.question-card,.result-card{background:linear-gradient(145deg,var(--panel),#0d1b2c);border:1px solid #294864;border-radius:17px;padding:22px;margin-bottom:16px;box-shadow:0 12px 28px #0003}
+.hero-card{border-color:#347ba0}
+h2{color:var(--cyan);margin-top:0}
+h3{color:#d8edff;margin:0 0 8px}
+p{margin:8px 0 12px}
+.small,.muted{color:var(--muted);font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.tag{display:inline-block;padding:3px 9px;border-radius:20px;background:#153c56;color:#9feaff;font-size:.78rem;font-weight:700;margin-bottom:8px}
+.callout{border-left:4px solid var(--gold);padding:10px 14px;background:#332d1d;border-radius:7px;color:#fff0c5;margin:12px 0}
+.diagram{display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0}
+.block{flex:1;min-width:150px;text-align:center;padding:15px 10px;background:#123b59;border:1px solid #3987b5;border-radius:12px}
+.block strong{display:block;color:var(--cyan);font-size:1.1rem}
+.arrow{align-self:center;color:var(--gold);font-size:1.6rem}
+ul{padding-left:22px}
+li{margin:5px 0}
+.progress-wrap{height:10px;background:#26394c;border-radius:20px;overflow:hidden;margin:12px 0}
+#progress{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .3s}
+.option{display:block;width:100%;text-align:left;padding:13px 15px;margin:9px 0;border:1px solid #3a5875;border-radius:10px;background:#142940;color:var(--text);cursor:pointer;font-size:1rem}
+.option.selected{border-color:var(--cyan);background:#17405a}
+.option.correct{border-color:var(--green);background:#123d32}
+.option.wrong{border-color:var(--red);background:#482631}
+.feedback{padding:14px;border-radius:10px;margin:14px 0;background:#1a3046;border:1px solid #45627e}
+.feedback.good{border-color:var(--green)}
+.feedback.bad{border-color:var(--red)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row .spacer{flex:1}
+#score{font-weight:700;color:var(--gold)}
+input[type=text]{padding:11px;border-radius:9px;border:1px solid #49647e;background:#0b1b2d;color:white;width:min(100%,320px)}
+footer{text-align:center;color:var(--muted);padding:20px;border-top:1px solid #213b55}
+.hidden{display:none!important}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(max-width:600px){.hero-card,.card,.lesson,.question-card{padding:16px}nav{position:static}}
+</style>
+</head>
+<body>
+<header>
+ <div class="eyebrow">ACADEMIA DO PROCESSADOR</div>
+ <h1>MISSÃO CPU</h1>
+ <p>Aprende como funciona o processador, explora os seus componentes e enfrenta um desafio avançado com perguntas difíceis e correção explicada.</p>
+</header>
+<nav aria-label="Navegação principal">
+ <button data-page="inicio" aria-selected="true">Início</button>
+ <button data-page="aprender" aria-selected="false">Aprender</button>
+ <button data-page="desafio" aria-selected="false">Desafio avançado</button>
+ <button data-page="resultados" aria-selected="false">Resultados e revisão</button>
+</nav>
+<main>
+<section id="inicio" class="page active">
+ <div class="hero-card">
+  <span class="tag">MISSÃO DE NÍVEL AVANÇADO</span>
+  <h2>Estás preparado para compreender a CPU?</h2>
+  <p>A CPU é um dos componentes fundamentais de um computador. Neste programa vais aprender a sua organização interna, perceber como executa instruções e distinguir conceitos que são frequentemente confundidos.</p>
+  <div class="grid">
+   <div class="card"><h3>1. Aprende</h3><p>Consulta explicações sobre arquitetura, núcleos, registos, memória cache e ciclo de instrução.</p></div>
+   <div class="card"><h3>2. Põe à prova os teus conhecimentos</h3><p>Responde a 15 perguntas exigentes, com quatro opções e apenas uma resposta correta.</p></div>
+   <div class="card"><h3>3. Corrige e evolui</h3><p>Depois de responderes, recebe a correção e uma explicação para compreenderes o raciocínio.</p></div>
+  </div>
+  <div class="callout"><strong>Conselho:</strong> lê primeiro os conteúdos de aprendizagem. O desafio inclui situações de interpretação, não apenas perguntas de memorização.</div>
+  <button class="btn primary" onclick="go('aprender')">Começar a aprender</button>
+ </div>
+ <div class="card">
+  <h3>O que significa CPU?</h3>
+  <p>CPU é a sigla de <strong>Central Processing Unit</strong>, expressão inglesa que significa <strong>Unidade Central de Processamento</strong>. É o processador que interpreta e executa instruções de programas e coordena muitas das operações do computador.</p>
+ </div>
+</section>
+
+<section id="aprender" class="page">
+ <h2>Área de aprendizagem</h2>
+ <p class="muted">Estuda cada tema com atenção. Os conceitos apresentados são a base para resolver o desafio avançado.</p>
+ <article class="lesson">
+  <span class="tag">TEMA 1</span><h3>O que é e para que serve a CPU?</h3>
+  <p>A <strong>Unidade Central de Processamento (CPU)</strong>, também chamada processador, é o componente que executa instruções de programas. Recebe dados e instruções, realiza operações e coordena a comunicação com outros componentes, como a memória RAM e os dispositivos de entrada e saída.</p>
+  <p>A CPU não guarda, por si só, todos os ficheiros do computador. Os dados e programas são normalmente armazenados num dispositivo de armazenamento, como um SSD ou um disco rígido, e os dados necessários ao trabalho em curso são carregados para a memória.</p>
+  <div class="callout">A CPU é muitas vezes comparada ao «cérebro» do computador. É uma comparação útil, mas simplificada: o computador depende também da memória, do armazenamento, da placa gráfica e de outros componentes.</div>
+ </article>
+ <article class="lesson">
+  <span class="tag">TEMA 2</span><h3>Componentes internos principais</h3>
+  <div class="grid">
+   <div class="card"><h3>Unidade de Controlo (UC)</h3><p>Coordena a execução das instruções. Controla a sequência de operações e os sinais que orientam os vários componentes internos do processador.</p></div>
+   <div class="card"><h3>Unidade Lógica e Aritmética (ULA)</h3><p>Executa operações aritméticas, como adições e subtrações, e operações lógicas, como comparações e operações booleanas.</p></div>
+   <div class="card"><h3>Registos</h3><p>Pequenas unidades de armazenamento muito rápidas dentro da CPU. Guardam temporariamente valores, endereços, instruções ou resultados necessários durante o processamento.</p></div>
+   <div class="card"><h3>Memória cache</h3><p>Memória muito rápida que mantém cópias de dados e instruções usados frequentemente, reduzindo a necessidade de aceder à RAM. Costuma estar organizada em níveis, como L1, L2 e L3.</p></div>
+  </div>
+  <div class="diagram">
+   <div class="block"><strong>Unidade de Controlo</strong>Coordena e orienta</div><div class="arrow">↔</div>
+   <div class="block"><strong>ULA</strong>Calcula e compara</div><div class="arrow">↔</div>
+   <div class="block"><strong>Registos</strong>Guardam valores temporários</div>
+  </div>
+  <p class="small">Esquema simplificado: numa CPU real, estes elementos comunicam através de várias ligações e estruturas internas, e a organização pode variar consoante a arquitetura.</p>
+ </article>
+ <article class="lesson">
+  <span class="tag">TEMA 3</span><h3>Como funciona o ciclo de instrução?</h3>
+  <p>Um modelo didático do ciclo de instrução apresenta três fases principais:</p>
+  <ol>
+   <li><strong>Busca (fetch):</strong> a CPU obtém da memória a próxima instrução a executar, recorrendo ao endereço indicado pelo contador de programa.</li>
+   <li><strong>Descodificação (decode):</strong> a unidade de controlo interpreta a instrução e determina que operação e que dados são necessários.</li>
+   <li><strong>Execução (execute):</strong> a CPU realiza a operação, por exemplo através da ULA, acede à memória quando necessário ou comunica com outros componentes.</li>
+  </ol>
+  <p>Depois, o processo prossegue com a instrução seguinte. Os processadores modernos utilizam técnicas mais complexas, como a execução em pipeline, e podem sobrepor fases de várias instruções.</p>
+  <div class="diagram"><div class="block"><strong>1. Busca</strong>Obter a instrução</div><div class="arrow">→</div><div class="block"><strong>2. Descodificação</strong>Interpretar</div><div class="arrow">→</div><div class="block"><strong>3. Execução</strong>Realizar a operação</div></div>
+ </article>
+ <article class="lesson">
+  <span class="tag">TEMA 4</span><h3>Núcleos e threads</h3>
+  <p>Um <strong>núcleo</strong> é uma unidade de processamento dentro da CPU, capaz de executar instruções. Um processador com vários núcleos consegue realizar trabalho em paralelo, desde que o sistema operativo e os programas consigam distribuir as tarefas.</p>
+  <p>Uma <strong>thread</strong> é uma sequência de execução de um programa. Algumas CPUs suportam tecnologias que permitem a um núcleo gerir mais do que uma thread em simultâneo. Isto não significa que cada thread tenha necessariamente o desempenho de um núcleo físico completo.</p>
+  <div class="callout">Mais núcleos não significam automaticamente um computador mais rápido em todas as tarefas. O resultado depende do programa, da arquitetura, das frequências, da memória e de outros fatores.</div>
+ </article>
+ <article class="lesson">
+  <span class="tag">TEMA 5</span><h3>Frequência, GHz e desempenho</h3>
+  <p>A frequência indica o número de ciclos de relógio por segundo. Um gigahertz (GHz) corresponde a mil milhões de ciclos por segundo. A frequência é importante, mas não indica, isoladamente, quantas instruções úteis a CPU consegue concluir em cada segundo.</p>
+  <p>O desempenho também depende da arquitetura, da quantidade de trabalho realizado por ciclo (IPC), do número de núcleos, da cache, dos limites de energia e temperatura e do tipo de programa.</p>
+  <p>Por isso, comparar dois processadores apenas pelo valor em GHz pode levar a conclusões erradas.</p>
+ </article>
+ <article class="lesson">
+  <span class="tag">TEMA 6</span><h3>Memória RAM, cache e armazenamento</h3>
+  <ul>
+   <li><strong>Registos:</strong> estão dentro do núcleo e guardam valores de utilização imediata.</li>
+   <li><strong>Cache:</strong> mantém dados e instruções prováveis de serem reutilizados, diminuindo o tempo médio de acesso.</li>
+   <li><strong>RAM:</strong> guarda temporariamente os programas e dados em utilização; é volátil, ou seja, perde o seu conteúdo quando deixa de receber energia.</li>
+   <li><strong>SSD ou disco rígido:</strong> guardam dados de forma persistente, mesmo quando o computador está desligado.</li>
+  </ul>
+  <p>Em geral, os registos e a cache têm menor capacidade e maior rapidez do que a RAM. O armazenamento costuma ter maior capacidade, mas é mais lento do que a memória principal.</p>
+ </article>
+ <article class="lesson">
+  <span class="tag">TEMA 7</span><h3>Pipeline, previsão de desvios e temperatura</h3>
+  <p><strong>Pipeline</strong> é uma técnica que divide o processamento de instruções em etapas, permitindo que diferentes instruções estejam em fases distintas ao mesmo tempo. Não significa que cada instrução termine instantaneamente.</p>
+  <p>Quando o processador encontra um desvio condicional, pode tentar prever qual será o caminho seguido pelo programa. Se a previsão estiver errada, parte do trabalho especulativo pode ter de ser descartada.</p>
+  <p>O processador produz calor durante o funcionamento. O sistema de arrefecimento, que pode incluir dissipador e ventoinha, ajuda a manter a temperatura dentro dos limites de funcionamento. Temperaturas excessivas podem levar à redução automática da frequência para proteger o equipamento.</p>
+ </article>
+ <div class="row"><button class="btn primary" onclick="startQuiz()">Já estudei — iniciar o desafio</button><button class="btn" onclick="go('inicio')">Voltar ao início</button></div>
+</section>
+
+<section id="desafio" class="page">
+ <div class="row"><div><h2>Desafio avançado</h2><p class="muted">15 perguntas • 4 opções • 1 resposta correta por pergunta</p></div><div class="spacer"></div><div id="score">Pontuação: 0</div></div>
+ <div class="progress-wrap"><div id="progress"></div></div>
+ <div class="question-card">
+  <div class="row"><span class="tag" id="qnumber">PERGUNTA 1 DE 15</span><span class="spacer"></span><span class="muted" id="qlevel">Nível: avançado</span></div>
+  <h3 id="question">Carrega em «Iniciar desafio» para começar.</h3>
+  <div id="options"></div>
+  <div id="feedback" class="feedback hidden" aria-live="polite"></div>
+  <div class="row"><span class="spacer"></span><button class="btn primary" id="action" onclick="beginQuiz()">Iniciar desafio</button></div>
+ </div>
+ <p class="small">A correção só aparece depois de escolheres uma resposta. Lê a explicação antes de avançar para a pergunta seguinte.</p>
+</section>
+
+<section id="resultados" class="page">
+ <h2>Resultados e revisão</h2>
+ <div class="result-card">
+  <h3 id="finaltitle">Ainda não concluíste o desafio.</h3>
+  <p id="finalscore">Quando terminares o questionário, a tua pontuação e a revisão aparecerão aqui.</p>
+  <div id="review"></div>
+  <button class="btn primary" onclick="startQuiz()">Repetir o desafio</button>
+ </div>
+</section>
+</main>
+<footer>MISSÃO CPU • Aprende, raciocina e confirma os teus conhecimentos.</footer>
+<script>
+const questions = [
+ {q:"Um programa pede à CPU que some dois valores que já estão em registos. Qual é a descrição mais correta do papel da ULA?",o:["Vai buscar o programa ao SSD e guarda o resultado permanentemente.","Executa a operação aritmética e produz um resultado, que poderá ser guardado num registo.","Decide, por si só, qual será a próxima instrução do programa.","Aumenta a frequência do relógio para que a soma seja possível."],c:1,e:"A ULA executa operações aritméticas e lógicas. A unidade de controlo coordena a operação e os registos podem fornecer os operandos e receber o resultado."},
+ {q:"Qual é a consequência mais provável de uma taxa elevada de acertos na memória cache?",o:["A CPU deixa de precisar de memória RAM.","O computador passa a guardar todos os ficheiros na cache.","Diminui a frequência com que a CPU tem de esperar por dados provenientes de níveis de memória mais lentos.","A frequência do relógio aumenta automaticamente."],c:2,e:"Uma cache eficaz reduz os acessos à RAM e o tempo de espera médio. Não substitui a RAM nem altera automaticamente a frequência do processador."},
+ {q:"Dois processadores funcionam a 3,2 GHz. Qual afirmação é cientificamente mais rigorosa?",o:["Têm obrigatoriamente o mesmo desempenho.","Executam obrigatoriamente o mesmo número de instruções por segundo.","Podem ter desempenhos diferentes devido à arquitetura, ao IPC, à cache e ao número de núcleos.","O que tiver mais memória RAM será sempre mais rápido."],c:2,e:"A frequência representa ciclos por segundo, não o número exato de instruções concluídas. A arquitetura e o trabalho realizado por ciclo também contam."},
+ {q:"Durante a fase de descodificação, o que acontece principalmente?",o:["A instrução é interpretada para determinar a operação e os recursos necessários.","O resultado final é gravado no SSD.","A ventoinha calcula a temperatura ideal.","A instrução é apagada da memória RAM."],c:0,e:"Na descodificação, a CPU interpreta a instrução obtida na fase de busca e identifica a operação e os operandos necessários."},
+ {q:"Qual é a distinção correta entre um núcleo físico e uma thread?",o:["Uma thread é sempre um núcleo físico completo.","Um núcleo é uma unidade de processamento; uma thread é uma sequência de execução que pode ser gerida pelo núcleo.","Um núcleo é uma memória e uma thread é um dispositivo de armazenamento.","São dois nomes para a mesma característica."],c:1,e:"O núcleo é uma unidade física de processamento. A thread representa uma sequência de execução. Algumas tecnologias permitem que um núcleo suporte várias threads."},
+ {q:"Porque é que uma previsão de desvio incorreta pode prejudicar o desempenho?",o:["Porque obriga a apagar o sistema operativo.","Porque pode obrigar a descartar trabalho especulativo e a retomar a execução pelo caminho correto.","Porque transforma a memória cache em memória não volátil.","Porque impede permanentemente a CPU de executar instruções."],c:1,e:"A CPU pode executar trabalho especulativo com base numa previsão. Se a previsão falhar, esse trabalho pode ser descartado, causando perda de ciclos."},
+ {q:"Qual destas sequências representa melhor o ciclo de instrução simplificado?",o:["Execução → armazenamento permanente → arrefecimento.","Descodificação → busca → desligar.","Busca → descodificação → execução.","RAM → SSD → monitor."],c:2,e:"O modelo didático apresenta busca, descodificação e execução. Os processadores reais podem dividir e sobrepor estas etapas de forma mais complexa."},
+ {q:"Uma aplicação beneficia pouco de vários núcleos e depende sobretudo de uma sequência de operações que não pode ser dividida. O que se pode concluir?",o:["Adicionar núcleos pode trazer ganhos limitados nessa aplicação.","A aplicação passará obrigatoriamente a executar duas vezes mais depressa.","A cache deixa de ser utilizada.","A CPU passa a funcionar sem unidade de controlo."],c:0,e:"O paralelismo depende da possibilidade de dividir o trabalho. Uma tarefa essencialmente sequencial pode não aproveitar muitos núcleos."},
+ {q:"Qual é a função mais característica dos registos da CPU?",o:["Guardar permanentemente fotografias e documentos.","Armazenar temporariamente valores, endereços e instruções usados diretamente no processamento.","Arrefecer os núcleos durante operações matemáticas.","Substituir o SSD quando a RAM fica cheia."],c:1,e:"Os registos são pequenas unidades de armazenamento muito rápidas integradas na CPU e utilizadas durante a execução das instruções."},
+ {q:"O que significa dizer que a RAM é volátil?",o:["Que os dados desaparecem quando deixa de receber energia.","Que os dados são sempre comprimidos.","Que a RAM só funciona quando está ligada à Internet.","Que a RAM é mais lenta do que qualquer disco rígido."],c:0,e:"A memória RAM é volátil: necessita de energia para manter os dados. Um SSD ou disco rígido, por outro lado, conserva os dados sem alimentação elétrica."},
+ {q:"Um processador reduz a frequência quando atinge uma temperatura demasiado elevada. Qual é o objetivo provável?",o:["Aumentar a capacidade do SSD.","Proteger o processador, limitando a produção de calor e o consumo de energia.","Transformar todos os núcleos em memória cache.","Eliminar a necessidade de dissipador."],c:1,e:"A redução automática da frequência, conhecida como limitação térmica ou thermal throttling, ajuda a evitar que a temperatura ultrapasse os limites seguros."},
+ {q:"Qual afirmação sobre o pipeline está correta?",o:["Faz com que cada instrução tenha sempre latência zero.","Permite que várias instruções estejam simultaneamente em diferentes etapas de processamento.","É uma memória permanente instalada no SSD.","Elimina todos os desvios condicionais."],c:1,e:"O pipeline sobrepõe etapas de instruções diferentes, aumentando potencialmente o débito de instruções. Não elimina a latência nem todos os riscos de execução."},
+ {q:"Uma CPU tem cache L1, L2 e L3. Qual é a afirmação mais adequada em termos gerais?",o:["A cache L1 é normalmente a mais próxima do núcleo e muito rápida; os níveis seguintes tendem a oferecer maior capacidade e maior latência.","A cache L3 é sempre mais rápida e menor do que a L1.","A cache L1 guarda os ficheiros mesmo depois de desligar o computador.","Os três níveis são exatamente iguais em capacidade e velocidade."],c:0,e:"Em muitas arquiteturas, a L1 é a mais pequena e rápida e está muito próxima do núcleo. L2 e L3 tendem a ser maiores, mas com maior latência. A organização varia entre processadores."},
+ {q:"Qual situação ilustra melhor a diferença entre armazenamento e memória principal?",o:["Um ficheiro guardado num SSD mantém-se após desligar o computador; os dados na RAM são temporários.","A RAM mantém sempre os dados sem energia e o SSD perde-os.","O SSD executa todas as instruções da CPU.","A cache é o único local onde um programa pode existir."],c:0,e:"O SSD é armazenamento não volátil. A RAM é memória de trabalho volátil, usada para manter temporariamente programas e dados em utilização."},
+ {q:"Um processador A tem frequência superior à do processador B, mas arquitetura mais antiga e menor IPC. O que é correto afirmar?",o:["A é obrigatoriamente mais rápido em qualquer tarefa.","B é obrigatoriamente mais rápido em qualquer tarefa.","A frequência, isoladamente, não permite determinar qual terá melhor desempenho; é necessário considerar a tarefa e outros fatores.","O IPC mede a quantidade de eletricidade armazenada na RAM."],c:2,e:"O desempenho depende da frequência, do IPC, da arquitetura, dos núcleos, da cache, dos limites térmicos e do tipo de tarefa. É necessário comparar resultados adequados."}
+];
+let current=0,points=0,answered=false,started=false,history=[];
+function go(id){document.querySelectorAll('section.page').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('nav button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.page===id)));window.scrollTo({top:0,behavior:'smooth'});}
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+function startQuiz(){current=0;points=0;answered=false;started=true;history=[];document.getElementById('score').textContent='Pontuação: 0';go('desafio');renderQuestion();}
+function beginQuiz(){startQuiz();}
+function renderQuestion(){
+ const q=questions[current];answered=false;
+ document.getElementById('qnumber').textContent=`PERGUNTA ${current+1} DE ${questions.length}`;
+ document.getElementById('question').textContent=q.q;
+ document.getElementById('qlevel').textContent='Nível: avançado';
+ document.getElementById('progress').style.width=(current/questions.length*100)+'%';
+ const opts=document.getElementById('options');opts.innerHTML='';
+ q.o.forEach((option,i)=>{const b=document.createElement('button');b.className='option';b.textContent=String.fromCharCode(65+i)+') '+option;b.onclick=()=>answer(i);opts.appendChild(b);});
+ const fb=document.getElementById('feedback');fb.className='feedback hidden';fb.textContent='';
+ const action=document.getElementById('action');action.textContent='Confirmar resposta';action.onclick=()=>{const chosen=document.querySelector('.option.selected');if(chosen){answer(Number(chosen.dataset.index));}};
+ document.querySelectorAll('.option').forEach((b,i)=>{b.dataset.index=i;b.onclick=()=>{if(answered)return;document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');};});
+}
+function answer(i){
+ if(answered)return;
+ const q=questions[current];answered=true;const ok=i===q.c;if(ok)points+=100;
+ history.push({i,correct:ok});
+ document.querySelectorAll('.option').forEach((b,j)=>{b.disabled=true;if(j===q.c)b.classList.add('correct');else if(j===i)b.classList.add('wrong');});
+ const fb=document.getElementById('feedback');fb.className='feedback '+(ok?'good':'bad');fb.innerHTML=`<strong>${ok?'Resposta correta! +100 pontos':'Resposta incorreta. +0 pontos'}</strong><br>${q.e}`;
+ document.getElementById('score').textContent='Pontuação: '+points;
+ const action=document.getElementById('action');action.textContent=current===questions.length-1?'Ver resultado':'Pergunta seguinte';action.onclick=nextQuestion;
+}
+function nextQuestion(){if(!answered)return;if(current<questions.length-1){current++;renderQuestion();}else{finishQuiz();}}
+function finishQuiz(){
+ document.getElementById('progress').style.width='100%';
+ document.getElementById('question').textContent='Desafio concluído!';
+ document.getElementById('options').innerHTML='';
+ document.getElementById('feedback').className='feedback good';
+ document.getElementById('feedback').textContent=`Obtiveste ${points} em ${questions.length*100} pontos. Consulta os resultados e a revisão para veres todas as respostas.`;
+ document.getElementById('action').textContent='Ver resultados e correção';
+ document.getElementById('action').onclick=showResults;
+ document.getElementById('finaltitle').textContent=points>=1300?'Excelente domínio da CPU!':points>=1000?'Muito bom resultado!':points>=700?'Bom trabalho — continua a estudar.':'Continua a praticar: a revisão vai ajudar-te.';
+ document.getElementById('finalscore').textContent=`Pontuação final: ${points} / ${questions.length*100} (${Math.round(points/(questions.length*100)*100)}%). Acertaste em ${history.filter(x=>x.correct).length} de ${questions.length} perguntas.`;
+ const review=document.getElementById('review');review.innerHTML='';
+ questions.forEach((q,i)=>{const h=history[i];const d=document.createElement('div');d.className='feedback '+(h.correct?'good':'bad');const title=document.createElement('strong');title.textContent=`${i+1}. ${h.correct?'Correta':'Incorreta'} — ${q.q}`;const p=document.createElement('p');p.textContent='Resposta certa: '+String.fromCharCode(65+q.c)+') '+q.o[q.c];const e=document.createElement('p');e.textContent='Explicação: '+q.e;d.append(title,p,e);review.appendChild(d);});
+}
+function showResults(){go('resultados');}
+</script>
+</body>
+</html>
